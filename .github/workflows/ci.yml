@@ -46,10 +46,16 @@ jobs:
       - name: Build image Docker
         run: docker build -t taskflow:latest .
 
+      - name: Installer Trivy
+        uses: aquasecurity/setup-trivy@e07451d2e059ed86c2870430ea286b3a9e0bf241
+        with:
+          version: v0.68.2
+          cache: true
+
       - name: Scan avec Trivy
         uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: taskflow:latest
           severity: HIGH,CRITICAL
           exit-code: "0"
-          version: v0.68.2  
+          skip-setup-trivy: true
