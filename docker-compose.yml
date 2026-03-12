@@ -1,0 +1,20 @@
+services:
+  api:
+    image: exam-final:latest
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    networks:
+      - taskflow-net
+    expose:
+      - "5000"
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - taskflow-net
+
+networks:
+  taskflow-net:
+    driver: bridge
