@@ -52,4 +52,4 @@ jobs:
           image-ref: taskflow:latest
           severity: HIGH,CRITICAL
           exit-code: "0"
-          token-setup-trivy: ${{ github.token }}
+          version: v0.68.2  
