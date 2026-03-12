@@ -1,5 +1,5 @@
 services:
-  api:
+  api1:
     image: exam-final:latest
     environment:
       - REDIS_HOST=redis
@@ -7,8 +7,45 @@ services:
       - redis
     networks:
       - taskflow-net
-    expose:
-      - "5000"
+    ports:
+      - "5001:5000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  api2:
+    image: exam-final:latest
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    networks:
+      - taskflow-net
+    ports:
+      - "5002:5000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  api3:
+    image: exam-final:latest
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    networks:
+      - taskflow-net
+    ports:
+      - "5003:5000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   redis:
     image: redis:7-alpine
