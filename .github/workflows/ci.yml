@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build image Docker
+      - name: Construire l'image Docker
         run: docker build -t taskflow:latest .
 
   security:
@@ -43,19 +43,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build image Docker
+      - name: Construire l'image Docker
         run: docker build -t taskflow:latest .
 
       - name: Installer Trivy
-        uses: aquasecurity/setup-trivy@e07451d2e059ed86c2870430ea286b3a9e0bf241
-        with:
-          version: v0.68.2
-          cache: true
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg lsb-release apt-transport-https
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
 
-      - name: Scan avec Trivy
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          image-ref: taskflow:latest
-          severity: HIGH,CRITICAL
-          exit-code: "0"
-          skip-setup-trivy: true
+      - name: Scanner l'image avec Trivy
+        run: trivy image --severity HIGH,CRITICAL --exit-code 0 taskflow:latest
